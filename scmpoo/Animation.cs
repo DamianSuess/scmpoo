@@ -17,6 +17,7 @@ namespace scmpoo
             Finished = false;
         }
 
+        // should always call this in the override method otherwise the Finished property won't reset (alternatively just reset it yourself)
         public virtual void Start() {
             Finished = false;
         }

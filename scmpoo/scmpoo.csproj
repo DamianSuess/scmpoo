@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="animations\Falling.cs" />
+    <Compile Include="animations\Move.cs" />
     <Compile Include="animations\Turn.cs" />
     <Compile Include="FormPoo.cs">
       <SubType>Form</SubType>

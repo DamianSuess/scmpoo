@@ -21,7 +21,7 @@ namespace scmpoo.animations
         {
             base.Start();
             step = -1;
-            start = new Random().Next(0, 2) == 1 ? 9 : 12;
+            start = Program.RandomInst.Next(0, 2) == 1 ? 9 : 12;
         }
 
         public override int Update()

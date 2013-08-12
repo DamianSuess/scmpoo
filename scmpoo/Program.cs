@@ -14,6 +14,8 @@ namespace scmpoo
         public static List<Bitmap> SpriteList = new List<Bitmap>();
         public static List<FormPoo> PooFormList = new List<FormPoo>();
 
+        public static Random RandomInst = new Random();
+
         [STAThread]
         static void Main()
         {

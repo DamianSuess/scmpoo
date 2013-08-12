@@ -22,13 +22,12 @@ namespace scmpoo
 
         List<Animation> AnimationList = new List<Animation>();
 
-        Random randy = new Random();
-
         public FormPoo()
         {
             InitializeComponent();
             // animation list
             AnimationList.Add(new Turn(this));
+            AnimationList.Add(new Move(this));
             // init timer
             timer.SynchronizingObject = this;
             timer.Interval = 10;
@@ -90,9 +89,10 @@ namespace scmpoo
                 TickTock();
                 return 100;
             }
+            // todo: check if the window the poo is on has been moved and set animation to Falling ?
             if (currentAnimation == null || currentAnimation.Finished)
             {
-                SetAnimation(AnimationList[randy.Next(AnimationList.Count)]);
+                SetAnimation(AnimationList[Program.RandomInst.Next(AnimationList.Count)]);
             }
             return currentAnimation.Update();
         }
