@@ -34,6 +34,8 @@ namespace scmpoo
             timer.Elapsed += timer_Elapsed;
             // set initial animation
             currentAnimation = new Falling(this);
+            // dix
+            this.DoubleBuffered = true;
         }
 
         private void FormPoo_Load(object sender, EventArgs e)
