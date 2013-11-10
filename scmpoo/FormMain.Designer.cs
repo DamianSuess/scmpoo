@@ -1,6 +1,6 @@
 ﻿namespace scmpoo
 {
-    partial class FormSettings
+    partial class FormMain
     {
         /// <summary>
         /// Required designer variable.

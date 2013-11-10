@@ -9,44 +9,51 @@ namespace scmpoo.animations
         static int acceleration = 2;
         int velocity;
 
-        public Falling(FormPoo poo)
-            : base(poo)
+        public Falling(FormPoo c)
+            : base(c)
         {
 
         }
 
         public override void Start()
         {
+            base.Start();
             velocity = 0;
         }
 
-        public override int Update()
+        public override int Tick()
         {
-            PooForm.TickTock();
+            Step = (Step + 1) % 2;
+            Poo.SetSprite(4 + Step);
+            if (Poo.IsMouseDown)
+            {
+                velocity = 0;
+                return 100;
+            }
             int newvelocity = velocity + acceleration;
-            Screen currentScreen = Screen.FromControl(PooForm);
-            if (!currentScreen.WorkingArea.Contains(new Rectangle(PooForm.Location.X, PooForm.Location.Y + newvelocity, PooForm.Width, PooForm.Height)))
+            Screen currentScreen = Screen.FromControl(Poo);
+            if (!currentScreen.WorkingArea.Contains(new Rectangle(Poo.Location.X, Poo.Location.Y + newvelocity, Poo.Width, Poo.Height)))
             {
                 Impact(currentScreen.WorkingArea, newvelocity, false);
                 return 100;
             }
-            var rect = Utility.GetRectangleAtPoint(PooForm.Location.X + PooForm.Width / 2, PooForm.Location.Y + PooForm.Height + newvelocity);
+            var rect = Utility.GetRectangleAtPoint(Poo.Location.X + Poo.Width / 2, Poo.Location.Y + Poo.Height + newvelocity);
             if (rect != Rectangle.Empty
-                && Between(rect.Y, PooForm.Location.Y + PooForm.Height, PooForm.Location.Y + PooForm.Height + newvelocity)
-                && rect.Contains(PooForm.Location.X, PooForm.Location.Y + PooForm.Height + newvelocity)
-                && rect.Contains(PooForm.Location.X + PooForm.Width, PooForm.Location.Y + PooForm.Height + newvelocity))
+                && Between(rect.Y, Poo.Location.Y + Poo.Height, Poo.Location.Y + Poo.Height + newvelocity)
+                && rect.Contains(Poo.Location.X, Poo.Location.Y + Poo.Height + newvelocity)
+                && rect.Contains(Poo.Location.X + Poo.Width, Poo.Location.Y + Poo.Height + newvelocity))
             {
                 Impact(rect, newvelocity, true);
                 return 100;
             }
             velocity = newvelocity;
-            PooForm.Top += velocity;
+            Poo.Top += velocity;
             return 100;
         }
 
         private void Impact(Rectangle rect, int newvelocity, bool top)
         {
-            PooForm.Location = new Point(PooForm.Location.X, rect.Location.Y + (!top ? rect.Height : 0) - PooForm.Height);
+            Poo.Location = new Point(Poo.Location.X, rect.Location.Y + (!top ? rect.Height : 0) - Poo.Height);
             if (velocity <= acceleration * 2)
             {
                 velocity = 0;

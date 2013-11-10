@@ -41,21 +41,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animation.cs" />
+    <Compile Include="animations\Animation.cs" />
     <Compile Include="animations\Falling.cs" />
-    <Compile Include="animations\Move.cs" />
-    <Compile Include="animations\Turn.cs" />
+    <Compile Include="animations\random\Move.cs" />
+    <Compile Include="animations\random\Sneeze.cs" />
+    <Compile Include="animations\random\Turn.cs" />
     <Compile Include="FormPoo.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormPoo.Designer.cs">
       <DependentUpon>FormPoo.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSettings.cs">
+    <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSettings.Designer.cs">
-      <DependentUpon>FormSettings.cs</DependentUpon>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Utility.cs" />
@@ -71,8 +72,8 @@
     <EmbeddedResource Include="FormPoo.resx">
       <DependentUpon>FormPoo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSettings.resx">
-      <DependentUpon>FormSettings.cs</DependentUpon>
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

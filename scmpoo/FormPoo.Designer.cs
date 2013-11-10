@@ -28,7 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // FormPoo
             // 
@@ -36,21 +43,21 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Blue;
             this.ClientSize = new System.Drawing.Size(40, 40);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormPoo";
             this.ShowInTaskbar = false;
             this.Text = "FormPoo";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Blue;
-            this.Load += new System.EventHandler(this.FormPoo_Load);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormPoo_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormPoo_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FormPoo_MouseUp);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormPoo_Paint);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer timer1;
 
 
     }

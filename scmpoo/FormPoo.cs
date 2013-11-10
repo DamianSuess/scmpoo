@@ -1,58 +1,73 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using scmpoo.animations;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Drawing;
+using scmpoo.animations;
+using System.Reflection;
 
 namespace scmpoo
 {
     public partial class FormPoo : Form
     {
-
-        System.Timers.Timer timer = new System.Timers.Timer();
-
-        bool mouseDown = false;
-        Point mouseDownPoint;
-
-        Animation currentAnimation;
-
-        public int Facing { get; set; }
-
-        bool ticktock = false;
-
-        List<Animation> AnimationList = new List<Animation>();
-
         public FormPoo()
         {
             InitializeComponent();
-            // animation list
-            AnimationList.Add(new Turn(this));
-            AnimationList.Add(new Move(this));
-            // init timer
-            timer.SynchronizingObject = this;
-            timer.Interval = 10;
-            timer.Elapsed += timer_Elapsed;
-            // set initial animation
-            currentAnimation = new Falling(this);
-            // dix
-            this.DoubleBuffered = true;
         }
 
-        private void FormPoo_Load(object sender, EventArgs e)
+        public bool FacingRight { get; set; }
+
+        public Animation CurrentAnimation { get; set; }
+
+        public int CurrentSprite { get; set; }
+
+        public void SetSprite(int idx)
         {
-            SetSprite(3);
-            timer.Start();
+            CurrentSprite = idx;
+            this.Invalidate();
         }
 
-        private void FormPoo_MouseDown(object sender, MouseEventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (CurrentAnimation == null)
+            {
+                CurrentAnimation = new Falling(this);
+            }
+            if (CurrentAnimation.Finished)
+            {
+                var animations = Assembly.GetExecutingAssembly().GetTypes().Where(t => string.Equals(t.Namespace, "scmpoo.animations.random"));
+                var anim = animations.ElementAt(FormMain.RandomInst.Next(0, animations.Count()));
+                CurrentAnimation = Activator.CreateInstance(anim, this) as Animation;
+            }
+            if (!CurrentAnimation.Started)
+            {
+                CurrentAnimation.Start();
+                CurrentAnimation.Started = true;
+            }
+            int interval = CurrentAnimation.Tick();
+            timer1.Interval = interval;
+        }
+
+        #region mouse move
+
+        public bool IsMouseDown { get; set; }
+        private Point mouseDownPoint;
+
+        protected override void OnMouseDown(MouseEventArgs e)
         {
             mouseDownPoint = e.Location;
-            mouseDown = true;
+            IsMouseDown = true;
+            if (CurrentAnimation == null || !(CurrentAnimation is Falling))
+            {
+                CurrentAnimation = new Falling(this);
+            }
         }
 
-        private void FormPoo_MouseMove(object sender, MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (mouseDown)
+            if (IsMouseDown)
             {
                 int xDiff = mouseDownPoint.X - e.Location.X;
                 int yDiff = mouseDownPoint.Y - e.Location.Y;
@@ -62,67 +77,17 @@ namespace scmpoo
             }
         }
 
-        private void FormPoo_MouseUp(object sender, MouseEventArgs e)
+        protected override void OnMouseUp(MouseEventArgs e)
         {
-            SetAnimation(new Falling(this));
-            mouseDown = false;
+            IsMouseDown = false;
         }
 
-        DateTime nextrun = DateTime.Now;
+        #endregion
 
-        void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void FormPoo_Paint(object sender, PaintEventArgs e)
         {
-            if (DateTime.Now > nextrun)
-            {
-                nextrun = DateTime.Now + TimeSpan.FromMilliseconds(tick());
-            }
-        }
-
-        public void TickTock()
-        {
-            ticktock = !ticktock;
-            SetSprite(ticktock ? 4 : 5);
-        }
-
-        public int tick()
-        {
-            if (mouseDown)
-            {
-                TickTock();
-                return 100;
-            }
-            // todo: check if the window the poo is on has been moved and set animation to Falling ?
-            if (currentAnimation == null || currentAnimation.Finished)
-            {
-                SetAnimation(AnimationList[Program.RandomInst.Next(AnimationList.Count)]);
-            }
-            return currentAnimation.Update();
-        }
-
-        delegate void SetSpriteCallback(int num);
-
-        public void SetSprite(int num)
-        {
-            if (this.InvokeRequired)
-            {
-                SetSpriteCallback d = new SetSpriteCallback(SetSprite);
-                this.Invoke(d, new object[] { num });
-            }
-            else
-            {
-                this.BackgroundImage = Program.SpriteList[num + (Facing == 0 ? 0 : Program.SpriteList.Count / 2)];
-                this.Size = this.BackgroundImage.Size;
-            }
-        }
-
-        public void SetAnimation(Animation newAnimation)
-        {
-            if (currentAnimation != null)
-            {
-                currentAnimation.Stop();
-            }
-            currentAnimation = newAnimation;
-            currentAnimation.Start();
+            int sprite = CurrentSprite + (FacingRight ? FormMain.SpriteList.Count / 2 : 0);
+            e.Graphics.DrawImage(FormMain.SpriteList[sprite], 0, 0);
         }
 
     }
